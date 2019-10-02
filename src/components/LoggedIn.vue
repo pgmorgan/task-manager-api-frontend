@@ -12,6 +12,15 @@
 
 <script>
 export default {
+    created: function() {
+        const loadedToken = localStorage.getItem('token')
+        if (loadedToken) {
+            this.$store.state.token = loadedToken
+            this.token = loadedToken
+        } else {
+            this.$router.push('/')
+        }
+    },
     methods: {
         navigateToHome() {
             this.$router.push({path: '/'})

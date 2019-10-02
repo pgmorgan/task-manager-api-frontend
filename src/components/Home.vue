@@ -48,6 +48,16 @@ export default {
             token:              "",
         }
     },
+    created:    function() {
+        const loadedToken = localStorage.getItem('token')
+        if (loadedToken) {
+            this.$store.state.token = loadedToken
+            this.token = loadedToken
+            /* ^^^^^^ */
+            /* DELETE */
+            this.$router.push('/loggedin')
+        }
+    },
     methods:    {
         promptSignup() {
             this.showSignup = !this.showSignup
@@ -70,6 +80,7 @@ export default {
                 password:   this.signupPassword,
             }).then(response => {
                 this.$store.state.token = response.body.token
+                localStorage.setItem('token', response.body.token)
                 this.token = response.body.token
             }, error => {
                 console.log(error)
@@ -95,8 +106,13 @@ export default {
                 password:   this.loginPassword,
             }).then(response => {
                 this.loginError = false
+                /* ^^^^^^ */
+                /* DELETE */
                 this.$store.state.token = response.body.token
+                localStorage.setItem('token', response.body.token)
                 this.token = response.body.token
+                /* ^^^^^^ */
+                /* DELETE */
             }, error => {
                 if (error.body.status === 400) {
                     this.loginError = true
