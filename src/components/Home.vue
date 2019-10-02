@@ -12,9 +12,9 @@
             <label for="signupEmail">Email</label>
             <input type="text" id="signupEmail" v-model="signupEmail">
             <label for="signupPassword">Password</label>
-            <input type="password" id="signupPassword" v-model="signupPassword">
+            <input type="password" id="signupPassword" v-model="signupPassword" v-on:keyup="checkPasswordMatch">
             <label for="signupConfirmPassword">Confirm Password</label>
-            <input type="password" id="signupConfirmPassword" v-model="signupConfirmPassword" v-on:keyup.enter="signupSubmit()">
+            <input type="password" id="signupConfirmPassword" v-model="signupConfirmPassword" v-on:keyup="checkPasswordMatch" v-on:keyup.enter="signupSubmit()">
             <p v-if="emailError">Email address format is invalid</p>
             <p v-if="passwordError">Password length must be at least 8 characters</p>
             <p v-if="passwordMatchError">Passwords do not match</p>
@@ -44,7 +44,7 @@ export default {
             showLogin:          false,
             emailError:         false,
             passwordError:      false,
-            passwordMatchError: false,
+            passwordMatchError: true,
             token:              "",
         }
     },
@@ -59,6 +59,9 @@ export default {
         }
     },
     methods:    {
+        checkPasswordMatch() {
+            this.passwordMatchError = (this.signupPassword !== this.signupConfirmPassword)
+        },
         promptSignup() {
             this.showSignup = !this.showSignup
             this.showLogin = false
@@ -68,11 +71,8 @@ export default {
             this.showSignup = false
         },
         signupSubmit() {
-            if (this.signupPassword !== this.signupConfirmPassword) {
-                this.passwordMatchError = true
+            if (this.passwordMatchError === true) {
                 return
-            } else {
-                this.passwordMatchError = false
             }
             this.$http.post('http://localhost:3001/users', {
                 name:       this.signupName,
@@ -82,6 +82,9 @@ export default {
                 this.$store.state.token = response.body.token
                 localStorage.setItem('token', response.body.token)
                 this.token = response.body.token
+                /* ^^^^^^ */
+                /* DELETE */
+                this.$router.push('/loggedin')
             }, error => {
                 console.log(error)
                 if (error.body.errors.email) {
@@ -113,6 +116,7 @@ export default {
                 this.token = response.body.token
                 /* ^^^^^^ */
                 /* DELETE */
+                this.$router.push('/loggedin')
             }, error => {
                 if (error.body.status === 400) {
                     this.loginError = true
