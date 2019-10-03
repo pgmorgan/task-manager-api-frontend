@@ -69,8 +69,27 @@ export default {
         this.getTasks()
     },
     methods: {
+        modifyTaskUrl() {
+            let url = 'http://localhost:3001/tasks?'
+            if (this.selectedStatus === 'Incomplete Only') {
+                url += 'completed=false&'
+            } else if (this.selectedStatus === 'Completed Only') {
+                url += 'completed=true&'
+            }
+            if (this.selectedSortBy === 'Last Updated') {
+                url += 'sortBy=updatedAt'
+            } else if (this.selectedSortBy === 'Last Created') {
+                url += 'sortBy=createdAt'
+            }
+            if (this.selectedOrder === 'Ascending Order') {
+                url += '_asc&'
+            } else if (this.selectedOrder === 'Descending Order') {
+                url += '_desc&'
+            }
+            return url
+        },
         getTasks() {
-            let url = 'http://localhost:3001/tasks'
+            const url = this.modifyTaskUrl()
             // let headers = new Headers({'Content-Type': 'application/json;charset=utf-8'})
             // headers.append('authorization', 'Bearer ' + this.token)
             // this.taskArray.push(JSON.parse(this.$http.get(url, {
@@ -94,6 +113,17 @@ export default {
             this.$store.state.token = ''
             localStorage.setItem('token', '')
             this.$router.push({path: '/'})
+        },
+    },
+    watch: {
+        selectedStatus: function() {
+            this.getTasks()
+        },
+        selectedSortBy: function() {
+            this.getTasks()
+        },
+        selectedOrder:  function() {
+            this.getTasks()
         },
     },
 }
