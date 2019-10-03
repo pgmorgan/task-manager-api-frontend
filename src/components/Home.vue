@@ -57,6 +57,7 @@ export default {
             /* DELETE */
             this.$router.push('/loggedin')
         }
+        return
     },
     methods:    {
         checkPasswordMatch() {
