@@ -117,7 +117,9 @@ export default {
             } else if (this.selectedOrder === 'Descending Order') {
                 url += '_desc&'
             }
-            url += 'limit=' + (this.selectedLimit + 1).toString()
+            this.selectedLimit++
+            url += 'limit=' + (this.selectedLimit).toString()
+            this.selectedLimit--
             url += '&skip=' + this.skipAmount.toString()
             return url
         },
