@@ -2,6 +2,8 @@
     <div>
         <h1>The Logged In Page</h1>
         <hr>
+        <button v-on:click.prevent="logout">Logout</button>
+        <button v-on:click.prevent="navToSettings">User Settings</button>
         <p>{{ token }}</p>
         <span>
             <div>
@@ -41,12 +43,18 @@
         </span>
 
         <ul>
-            <li v-for="task in taskArray">
+            <li v-for="(task, i) in taskArray">
                 <p>Description: {{ task.description }}</p>
                 <p>Status: {{ task.completedString }}</p>
+                <label v-if="task.showUpdateDescription" for="updateDescription">Updated Description:</label>
+                <input v-if="task.showUpdateDescription" type="text" id="updateDescription" v-model="task.description">
+                <button v-if="task.showUpdateDescription" v-on:click.prevent="updateDescription(task._id, i)">Save</button>
+                <button v-if="!task.completed" v-on:click.prevent="changeCompletionStatus(task._id, true)">Mark as Completed</button>
+                <button v-if="task.completed" v-on:click.prevent="changeCompletionStatus(task._id, false)">Mark as Incomplete</button>
+                <button v-if="!task.showUpdateDescription" v-on:click.prevent="promptUpdateDescription(i)">Update Description</button>
+                <button v-if="task.showUpdateDescription" v-on:click.prevent="promptUpdateDescription(i)">Cancel Update Description</button>
             </li>
         </ul>
-        <button v-on:click.prevent="logout">Logout</button>
 
     </div>
 </template>
@@ -55,13 +63,13 @@
 export default {
     data() {
         return {
-            token:          "",
-            taskArray:      [],
+            token:              "",
+            taskArray:          [],
             selectedStatus:     'All Tasks',
             statusOptions:      ['All Tasks', 'Incomplete Only', 'Completed Only'],
-            selectedSortBy:     'Last Updated',
+            selectedSortBy:     'Last Created',
             sortByOptions:      ['Last Updated', 'Last Created'],
-            selectedOrder:      'Ascending Order',
+            selectedOrder:      'Descending Order',
             orderOptions:       ['Ascending Order', 'Descending Order'],
             selectedLimit:      10,
             limitOptions:       [5, 10, 20, 50],
@@ -87,6 +95,54 @@ export default {
         // }
     },
     methods: {
+        navToSettings() {
+            this.$router.push('/settings')
+        },
+        updateDescription(taskID, i) {
+            this.$http.patch('http://localhost:3001/tasks/' + taskID, {
+                description:   this.taskArray[i].description,
+            }, {
+                headers: {
+                    'Authorization':    'Bearer ' + this.token
+                }
+            }).then(response => {
+                this.getTasks()
+            }, error => {
+                console.log(error)
+            })
+        },
+        promptUpdateDescription(i) {
+            this.taskArray[i].showUpdateDescription = !this.taskArray[i].showUpdateDescription
+            // this.getTasks()
+            this.$forceUpdate()
+        },
+        changeCompletionStatus(taskID, boolValue)  {
+            this.$http.patch('http://localhost:3001/tasks/' + taskID, {
+                completed:  boolValue
+            }, { 
+                headers: { 
+                    'Authorization':  'Bearer ' + this.token 
+                } 
+            }).then(response => {
+                this.getTasks()
+            }, error => {
+                console.log(error)
+            })
+        },
+        // markAsIncomplete(taskID) {
+        //     this.$http.patch('http://localhost:3001/tasks/' + taskID, {
+        //         completed:  false
+        //     }, { 
+        //         headers: { 
+        //             'Authorization':  'Bearer ' + this.token 
+        //         } 
+        //     }).then(response => {
+        //         this.getTasks()
+        //     }, error => {
+        //         console.log(error)
+        //     })
+            
+        // },
         showPreviousPage() {
             this.skipAmount -= this.selectedLimit
             this.getTasks()
@@ -135,6 +191,7 @@ export default {
                     } else {
                         task.completedString = 'Incomplete'
                     }
+                    task.showUpdateDescription = false
                 })
                 console.log(response.body)
                 if (this.taskArray.length > this.selectedLimit) {
