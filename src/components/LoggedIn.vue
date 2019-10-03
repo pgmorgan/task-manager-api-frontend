@@ -28,8 +28,18 @@
                     </option>
                 </select>
             </div>
+            <div>
+                <label for="limit">Number of results per page:</label>
+                <select id="limit" v-model="selectedLimit">
+                    <option v-for="criteria in limitOptions">
+                        {{ criteria }}
+                    </option>
+                </select>
+            </div>
+            <button v-if="showNextButton" v-on:click.prevent="showNextPage">Next Page</button>
+            <button v-if="showPreviousButton" v-on:click.prevent="showPreviousPage">Previous Page</button>
         </span>
-        <p>{{ selectedStatus }}</p>
+
         <ul>
             <li v-for="task in taskArray">
                 <p>Description: {{ task.description }}</p>
@@ -53,9 +63,13 @@ export default {
             sortByOptions:      ['Last Updated', 'Last Created'],
             selectedOrder:      'Ascending Order',
             orderOptions:       ['Ascending Order', 'Descending Order'],
+            selectedLimit:      10,
+            limitOptions:       [5, 10, 20, 50],
+            skipAmount:         0,
+            showNextButton:     false,
         }
     },
-    created() {
+    created () {
         const loadedToken = localStorage.getItem('token')
         if (!loadedToken) {
             this.$router.push('/')
@@ -67,8 +81,25 @@ export default {
         // /* ^^^^^^^^^^^^^^^ */
         
         this.getTasks()
+        // console.log(this.taskArray.length, this.selectedLimit)
+        // if (this.taskArray.length > this.selectedLimit) {
+        //     this.showNextButton = true
+        // }
     },
     methods: {
+        showPreviousPage() {
+            this.skipAmount -= this.selectedLimit
+            this.getTasks()
+            this.showNextButton = true
+            if (this.skipAmount === 0) {
+                this.showPreviousButton = false
+            }
+        },
+        showNextPage() {
+            this.skipAmount += this.selectedLimit
+            this.getTasks()
+            this.showPreviousButton = true
+        },
         modifyTaskUrl() {
             let url = 'http://localhost:3001/tasks?'
             if (this.selectedStatus === 'Incomplete Only') {
@@ -86,15 +117,15 @@ export default {
             } else if (this.selectedOrder === 'Descending Order') {
                 url += '_desc&'
             }
+            url += 'limit=' + (this.selectedLimit + 1).toString()
+            url += '&skip=' + this.skipAmount.toString()
             return url
         },
         getTasks() {
             const url = this.modifyTaskUrl()
-            // let headers = new Headers({'Content-Type': 'application/json;charset=utf-8'})
-            // headers.append('authorization', 'Bearer ' + this.token)
-            // this.taskArray.push(JSON.parse(this.$http.get(url, {
             this.$http.get(url, { headers: { 'Authorization':  'Bearer ' + this.token } })
             .then(response => {
+                this.taskArray.length = 0
                 this.taskArray = response.body
                 this.taskArray.forEach(function(task) {
                     if (task.completed === true) {
@@ -104,6 +135,12 @@ export default {
                     }
                 })
                 console.log(response.body)
+                if (this.taskArray.length > this.selectedLimit) {
+                    this.showNextButton = true
+                    this.taskArray.pop()
+                } else {
+                    this.showNextButton = false
+                }
             }, error => {
                 console.log(error)
             })
@@ -117,12 +154,19 @@ export default {
     },
     watch: {
         selectedStatus: function() {
+            this.taskArray.length = 0
             this.getTasks()
         },
         selectedSortBy: function() {
+            this.taskArray.length = 0
             this.getTasks()
         },
         selectedOrder:  function() {
+            this.taskArray.length = 0
+            this.getTasks()
+        },
+        selectedLimit:  function() {
+            this.taskArray.length = 0
             this.getTasks()
         },
     },
