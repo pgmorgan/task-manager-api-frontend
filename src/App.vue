@@ -1,10 +1,8 @@
 <template>
-    <div class="container">
-        <h1>Routing</h1>
-        <li><router-link to="/">Home</router-link></li>
-        <li><router-link to="/loggedin">Logged In</router-link></li>
-        <hr>
-        <router-view></router-view>
+    <div id="page">
+        <span class="besideBody"></span>
+        <router-view class="body"></router-view>
+        <span class="besideBody"></span>
     </div>
 </template>
 
@@ -14,4 +12,15 @@
 </script>
 
 <style>
+    #page {
+        display:    flex;
+        flex-flow:  row nowrap;
+        justify-content:        space-between;
+    }
+
+    .body {
+        width:      100vw;
+        max-width:  1200px;
+        border:     1px solid pink;
+    }
 </style>

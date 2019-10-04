@@ -1,10 +1,13 @@
 <template>
-    <div>
-        <h1>The Logged In Page</h1>
-        <hr>
-        <button v-on:click.prevent="logout">Logout</button>
-        <button v-on:click.prevent="navToSettings">User Settings</button>
-        <p>{{ token }}</p>
+    <div class="homePage">
+        <h1>TaskTracker.io</h1>
+        <!-- <h2>Welcome {{  }}</h2> -->
+        <div>
+            <button class="btn" v-on:click.prevent="logout">Logout</button>
+            <button class="btn" v-on:click.prevent="navToSettings">User Settings</button>
+        </div>
+        <hr/>
+        <!-- <p>{{ token }}</p> -->
         <span>
             <div>
                 <label for="filter">Filter by Task Status:</label>
@@ -38,8 +41,8 @@
                     </option>
                 </select>
             </div>
-            <button v-if="showNextButton" v-on:click.prevent="showNextPage">Next Page</button>
-            <button v-if="showPreviousButton" v-on:click.prevent="showPreviousPage">Previous Page</button>
+            <button class="btn" v-if="showNextButton" v-on:click.prevent="showNextPage">Next Page</button>
+            <button class="btn" v-if="showPreviousButton" v-on:click.prevent="showPreviousPage">Previous Page</button>
         </span>
 
         <ul>
@@ -48,11 +51,11 @@
                 <p>Status: {{ task.completedString }}</p>
                 <label v-if="task.showUpdateDescription" for="updateDescription">Updated Description:</label>
                 <input v-if="task.showUpdateDescription" type="text" id="updateDescription" v-model="task.description">
-                <button v-if="task.showUpdateDescription" v-on:click.prevent="updateDescription(task._id, i)">Save</button>
-                <button v-if="!task.completed" v-on:click.prevent="changeCompletionStatus(task._id, true)">Mark as Completed</button>
-                <button v-if="task.completed" v-on:click.prevent="changeCompletionStatus(task._id, false)">Mark as Incomplete</button>
-                <button v-if="!task.showUpdateDescription" v-on:click.prevent="promptUpdateDescription(i)">Update Description</button>
-                <button v-if="task.showUpdateDescription" v-on:click.prevent="promptUpdateDescription(i)">Cancel Update Description</button>
+                <button class="btn btn-small" v-if="task.showUpdateDescription" v-on:click.prevent="updateDescription(task._id, i)">Save</button>
+                <button class="btn btn-small" v-if="!task.completed" v-on:click.prevent="changeCompletionStatus(task._id, true)">Mark as Completed</button>
+                <button class="btn btn-small" v-if="task.completed" v-on:click.prevent="changeCompletionStatus(task._id, false)">Mark as Incomplete</button>
+                <button class="btn btn-small" v-if="!task.showUpdateDescription" v-on:click.prevent="promptUpdateDescription(i)">Update Description</button>
+                <button class="btn btn-small" v-if="task.showUpdateDescription" v-on:click.prevent="promptUpdateDescription(i)">Cancel Update Description</button>
             </li>
         </ul>
 
@@ -89,10 +92,7 @@ export default {
         // /* ^^^^^^^^^^^^^^^ */
         
         this.getTasks()
-        // console.log(this.taskArray.length, this.selectedLimit)
-        // if (this.taskArray.length > this.selectedLimit) {
-        //     this.showNextButton = true
-        // }
+        // this.$http.get(
     },
     methods: {
         navToSettings() {
@@ -206,6 +206,7 @@ export default {
             // console.log(this.taskArray)
         },
         logout() {
+            this.token = ''
             this.$store.state.token = ''
             localStorage.setItem('token', '')
             this.$router.push({path: '/'})

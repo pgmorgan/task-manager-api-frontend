@@ -1,11 +1,12 @@
 <template>
-    <div>
-        <h1>The Home Page</h1>
-        <hr>
-        <button v-if="!showSignup" v-on:click="promptSignup()">Sign Up</button>
-        <button v-if="showSignup" v-on:click.prevent="promptSignup()">Cancel Sign Up</button>
-        <button v-if="!showLogin" v-on:click="promptLogin()">Login</button>
-        <button v-if="showLogin" v-on:click.prevent="promptLogin()">Cancel Login</button>
+    <div id="homePage">
+        <h1>TaskTracker.io</h1>
+        <div id="loginAndSignupBtnDiv">
+            <button class="btn" v-if="!showLogin" v-on:click="promptLogin()">Login</button>
+            <button class="btn" v-if="showLogin" v-on:click.prevent="promptLogin()">Cancel Login</button>
+            <button class="btn" v-if="!showSignup" v-on:click="promptSignup()">Sign Up</button>
+            <button class="btn" v-if="showSignup" v-on:click.prevent="promptSignup()">Cancel Sign Up</button>
+        </div>
         <div v-if="showSignup" id="loginForm">
             <label for="signupName">User Name</label>
             <input type="text" id="signupName" v-model="signupName">
@@ -18,7 +19,7 @@
             <p v-if="emailError">Email address format is invalid</p>
             <p v-if="passwordError">Password length must be at least 8 characters</p>
             <p v-if="passwordMatchError">Passwords do not match</p>
-            <button v-on:click.prevent="signupSubmit">Sign Up</button>
+            <button class="btn" v-on:click.prevent="signupSubmit">Sign Up</button>
         </div>        
         <div v-if="showLogin" id="loginForm">
             <label for="loginEmail">Email</label>
@@ -26,7 +27,7 @@
             <label for="loginPassword">Password</label>
             <input type="password" id="loginPassword" v-model="loginPassword" v-on:keyup.enter="loginSubmit()">
             <p v-if="loginError">Email or Password are incorrect</p>
-            <button v-on:click.prevent="loginSubmit">Login</button>
+            <button class="btn" v-on:click.prevent="loginSubmit">Login</button>
         </div>        
         <p>{{ token }}</p>
     </div>
@@ -130,8 +131,65 @@ export default {
 </script>
 
 <style>
-    #loginForm {
-        display:        flex;
-        flex-flow:      column nowrap;
+    .homePage{          
+        display:            flex;
+        flex-flow:          column nowrap;            
+        align-items:        center;
     }
+
+    #loginForm {
+        display:            flex;
+        flex-flow:          column nowrap;
+    }
+
+    hr {
+        border:             0;
+        clear:              both;
+        display:            block;
+        width:              96%;               
+        background-color:   black;
+        height:             1px;
+        margin:             1rem 0 1rem 0;
+        padding:            0;
+    }
+
+    .btn {
+        font-weight:        bold;
+        width:              14rem;
+        padding:            0.7rem 0 0.7rem 0; 
+        margin:             1rem;
+        background-color:   lightblue;
+    }
+
+    .btn-small {
+        width:              auto;
+        font-size:          1.35rem;
+        font-weight:        normal;
+        padding:            0.3rem 0.3rem 0.3rem 0.3rem;
+    }
+
+    input {
+        padding:            1rem;
+        border:             1px solid rgb(140,140,140);
+        border-radius:      0.3rem;
+    }
+
+    label {
+        padding:            0.6rem 0 0 0.3rem;
+    }
+
+    p {
+        padding:            0.3rem 0 0 0;
+    }
+
+    #loginAndSignupBtnDiv {
+        display:            flex;
+        flex-flow:          row wrap;
+        justify-content:    center;
+    }
+
+    select {
+        font-weight:        bold;
+    }
+
 </style>
