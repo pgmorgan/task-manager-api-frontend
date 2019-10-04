@@ -7,55 +7,72 @@
             <button class="btn" v-on:click.prevent="navToSettings">User Settings</button>
         </div>
         <hr/>
-        <!-- <p>{{ token }}</p> -->
-        <span>
-            <div>
+        <div id="filterLabelsAndSelects">
+            <span id="filterLabels">
                 <label for="filter">Filter by Task Status:</label>
-                <select id="filter" v-model="selectedStatus">
-                    <option v-for="criteria in statusOptions">
-                        {{ criteria }}
-                    </option>
-                </select>
-            </div>
-            <div>
                 <label for="sortBy">Sort by:</label>
-                <select id="sortBy" v-model="selectedSortBy">
-                    <option v-for="criteria in sortByOptions">
-                        {{ criteria }}
-                    </option>
-                </select>
-            </div>
-            <div>
                 <label for="order">Order:</label>
-                <select id="order" v-model="selectedOrder">
-                    <option v-for="criteria in orderOptions">
-                        {{ criteria }}
-                    </option>
-                </select>
-            </div>
-            <div>
                 <label for="limit">Number of results per page:</label>
-                <select id="limit" v-model="selectedLimit">
-                    <option v-for="criteria in limitOptions">
-                        {{ criteria }}
-                    </option>
-                </select>
-            </div>
-            <button class="btn" v-if="showNextButton" v-on:click.prevent="showNextPage">Next Page</button>
-            <button class="btn" v-if="showPreviousButton" v-on:click.prevent="showPreviousPage">Previous Page</button>
-        </span>
+            </span>
+            <span class="spanGap"></span>
+            <span>
+                <div>
+                    <select id="filter" v-model="selectedStatus">
+                        <option v-for="criteria in statusOptions">
+                            {{ criteria }}
+                        </option>
+                    </select>
+                </div>
+                <div>
+                    <select id="sortBy" v-model="selectedSortBy">
+                        <option v-for="criteria in sortByOptions">
+                            {{ criteria }}
+                        </option>
+                    </select>
+                </div>
+                <div>
+                    <select id="order" v-model="selectedOrder">
+                        <option v-for="criteria in orderOptions">
+                            {{ criteria }}
+                        </option>
+                    </select>
+                </div>
+                <div>
+                    <select id="limit" v-model="selectedLimit">
+                        <option v-for="criteria in limitOptions">
+                            {{ criteria }}
+                        </option>
+                    </select>
+                </div>
+            </span>
+        </div>
+        <button class="btn" v-if="showNextButton" v-on:click.prevent="showNextPage">Next Page</button>
+        <button class="btn" v-if="showPreviousButton" v-on:click.prevent="showPreviousPage">Previous Page</button>
 
-        <ul>
+        <ul id="tasks">
             <li v-for="(task, i) in taskArray">
-                <p>Description: {{ task.description }}</p>
-                <p>Status: {{ task.completedString }}</p>
-                <label v-if="task.showUpdateDescription" for="updateDescription">Updated Description:</label>
-                <input v-if="task.showUpdateDescription" type="text" id="updateDescription" v-model="task.description">
-                <button class="btn btn-small" v-if="task.showUpdateDescription" v-on:click.prevent="updateDescription(task._id, i)">Save</button>
-                <button class="btn btn-small" v-if="!task.completed" v-on:click.prevent="changeCompletionStatus(task._id, true)">Mark as Completed</button>
-                <button class="btn btn-small" v-if="task.completed" v-on:click.prevent="changeCompletionStatus(task._id, false)">Mark as Incomplete</button>
-                <button class="btn btn-small" v-if="!task.showUpdateDescription" v-on:click.prevent="promptUpdateDescription(i)">Update Description</button>
-                <button class="btn btn-small" v-if="task.showUpdateDescription" v-on:click.prevent="promptUpdateDescription(i)">Cancel Update Description</button>
+                <div class="divGap"></div>
+                <div class="taskDescAndStatus">
+                    <span class="spanGap"></span>
+                    <span class="justifyRight">
+                        <p class="removePad">Description:</p>
+                        <p class="removePad">Status:</p>
+                    </span>
+                    <span class="spanGap"></span>
+                    <span>
+                        <p class="removePad"><b>{{ task.description }}</b></p>
+                        <p class="removePad"><b>{{ task.completedString }}</b></p>
+                    </span>
+                </div>
+                <div class="justifyCenter">
+                    <label v-if="task.showUpdateDescription" for="updateDescription">Updated Description:</label>
+                    <input v-if="task.showUpdateDescription" type="text" id="updateDescription" v-model="task.description">
+                    <button class="btn btn-small" v-if="!task.completed" v-on:click.prevent="changeCompletionStatus(task._id, true)">Mark as<br>Completed</button>
+                    <button class="btn btn-small" v-if="task.completed" v-on:click.prevent="changeCompletionStatus(task._id, false)">Mark as<br>Incomplete</button>
+                    <button class="btn btn-small" v-if="!task.showUpdateDescription" v-on:click.prevent="promptUpdateDescription(i)">Update<br>Description</button>
+                    <button class="btn btn-small" v-if="task.showUpdateDescription" v-on:click.prevent="promptUpdateDescription(i)">Cancel Update<br>Description</button>
+                    <button class="btn btn-small" v-if="task.showUpdateDescription" v-on:click.prevent="updateDescription(task._id, i)">Save</button>
+                </div>
             </li>
         </ul>
 

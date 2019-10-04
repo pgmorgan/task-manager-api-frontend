@@ -1,5 +1,5 @@
 <template>
-    <div id="homePage">
+    <div class="homePage">
         <h1>TaskTracker.io</h1>
         <div id="loginAndSignupBtnDiv">
             <button class="btn" v-if="!showLogin" v-on:click="promptLogin()">Login</button>
@@ -7,21 +7,21 @@
             <button class="btn" v-if="!showSignup" v-on:click="promptSignup()">Sign Up</button>
             <button class="btn" v-if="showSignup" v-on:click.prevent="promptSignup()">Cancel Sign Up</button>
         </div>
-        <div v-if="showSignup" id="loginForm">
+        <div v-if="showSignup" class="loginForm">
             <label for="signupName">User Name</label>
-            <input type="text" id="signupName" v-model="signupName">
+            <input type="text" class="inputBox" id="signupName" v-model="signupName">
             <label for="signupEmail">Email</label>
-            <input type="text" id="signupEmail" v-model="signupEmail">
+            <input type="text" class="inputBox" id="signupEmail" v-model="signupEmail">
             <label for="signupPassword">Password</label>
-            <input type="password" id="signupPassword" v-model="signupPassword" v-on:keyup="checkPasswordMatch">
+            <input type="password" class="inputBox" id="signupPassword" v-model="signupPassword" v-on:keyup="checkPasswordMatch">
             <label for="signupConfirmPassword">Confirm Password</label>
-            <input type="password" id="signupConfirmPassword" v-model="signupConfirmPassword" v-on:keyup="checkPasswordMatch" v-on:keyup.enter="signupSubmit()">
-            <p v-if="emailError">Email address format is invalid</p>
-            <p v-if="passwordError">Password length must be at least 8 characters</p>
-            <p v-if="passwordMatchError">Passwords do not match</p>
+            <input type="password" class="inputBox" id="signupConfirmPassword" v-model="signupConfirmPassword" v-on:keyup="checkPasswordMatch" v-on:keyup.enter="signupSubmit()">
+            <p class="pPad" v-if="emailError">Email address format is invalid</p>
+            <p class="pPad" v-if="passwordError">Password length must be at least 8 characters</p>
+            <p class="pPad" v-if="passwordMatchError">Passwords do not match</p>
             <button class="btn" v-on:click.prevent="signupSubmit">Sign Up</button>
         </div>        
-        <div v-if="showLogin" id="loginForm">
+        <div v-if="showLogin" class="loginForm">
             <label for="loginEmail">Email</label>
             <input type="text" id="loginEmail" v-model="loginEmail">
             <label for="loginPassword">Password</label>
@@ -29,7 +29,7 @@
             <p v-if="loginError">Email or Password are incorrect</p>
             <button class="btn" v-on:click.prevent="loginSubmit">Login</button>
         </div>        
-        <p>{{ token }}</p>
+        <!-- <p>{{ token }}</p> -->
     </div>
 </template>
 
@@ -63,6 +63,7 @@ export default {
     methods:    {
         checkPasswordMatch() {
             this.passwordMatchError = (this.signupPassword !== this.signupConfirmPassword)
+            this.passwordError = (this.signupPassword.length < 8)
         },
         promptSignup() {
             this.showSignup = !this.showSignup
@@ -137,9 +138,20 @@ export default {
         align-items:        center;
     }
 
-    #loginForm {
+    .inputBox {
+        max-width:          300px;
+        width:              90%;
+    }
+
+    .loginForm {
         display:            flex;
         flex-flow:          column nowrap;
+        align-items:        center;
+    }
+
+    h1 {
+        font-family:        'Lobster', sans-serif;
+        font-size:          5rem;
     }
 
     hr {
@@ -158,7 +170,11 @@ export default {
         width:              14rem;
         padding:            0.7rem 0 0.7rem 0; 
         margin:             1rem;
-        background-color:   lightblue;
+        background-color:   rgb(180, 180, 254);
+        border-bottom:      1px solid rgb(130, 130, 254);
+        border-right:       1px solid rgb(130, 130, 254);
+        border-top:         1px solid rgb(220, 220, 254);
+        border-left:        1px solid rgb(220, 220, 254);
     }
 
     .btn-small {
@@ -166,6 +182,7 @@ export default {
         font-size:          1.35rem;
         font-weight:        normal;
         padding:            0.3rem 0.3rem 0.3rem 0.3rem;
+        height:             5rem;
     }
 
     input {
@@ -178,8 +195,13 @@ export default {
         padding:            0.6rem 0 0 0.3rem;
     }
 
-    p {
+    .pPad {
         padding:            0.3rem 0 0 0;
+    }
+
+    .removePad {
+        padding:            0;
+        margin:             0;
     }
 
     #loginAndSignupBtnDiv {
@@ -190,6 +212,56 @@ export default {
 
     select {
         font-weight:        bold;
+    }
+
+    #filterLabels {
+        display:            flex;
+        flex-flow:          column nowrap;
+        align-items:        end;
+    }
+
+    #filterLabelsAndSelects {
+        display:            flex;
+        flex-flow:          row nowrap;
+    }
+
+    .spanGap {
+        width:              10px;
+    }
+
+    .divGap {
+        height:             5px;
+    }
+
+    #tasks {
+        display:            flex;
+        flex-flow:          row wrap;
+        justify-content:    center;
+    }
+
+    li {
+        border:             1px solid black;
+        margin:             1rem;
+        width:              25vw;         
+        max-width:          400px;
+        min-width:          250px;
+    }
+
+    .taskDescAndStatus {
+        display:            flex;
+        flex-flow:          row nowrap;
+    }
+
+    .justifyRight {
+        display:            flex;
+        flex-flow:          column nowrap;
+        align-items:        end;
+    }
+
+    .justifyCenter {
+        display:            flex;
+        flex-flow:          row wrap;
+        justify-content:    center;
     }
 
 </style>
