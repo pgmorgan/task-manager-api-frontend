@@ -1,35 +1,50 @@
 <template>
-    <div>
+    <div class="homePage">
         <h1>Settings</h1>
+        <button class="btn autoWidth" v-on:click.prevent="navToTasks()">Go Back</button>
         <hr>
-            <button v-on:click.prevent="logoutAll()">Logout from All Browsers</button>
+        <h2>Delete my Account</h2>
+            <button class="btn autoWidth" v-on:click.prevent="navToDeleteAccount()">Delete my Account</button>
+        <h2>Logout from all Sessions</h2>
+            <button class="btn autoWidth" v-on:click.prevent="logoutAll()">Logout from All Browsers</button>
             <p>This will log you out from all sessions on any device.</p>
         <hr>
-        <p>Name: {{ oldName }}<br>
-        Email: {{ oldEmail }}<br>
-        Age: {{ oldAge }}</p>
+        <h2>Update my Account</h2>
+        <div class="taskDescAndStatus">
+            <span class="justifyRight">
+                <p>Name:</p>
+                <p>Email:</p>
+                <p>Age:</p>
+            </span>
+            <span class="spanGap"></span>
+            <span>
+                <p><b>{{ oldName }}</b></p>
+                <p><b>{{ oldEmail }}</b></p>
+                <p><b>{{ oldAge }}</b></p>
+            </span>
+        </div>     
         <p>Update one or multiple user profile details.</p>
         <div class="col">
-            <label for="newName">User Name (Optional)</label>
+            <label for="newName">Update User Name (Optional)</label>
             <input type="text" id="newName" v-model="newName">
-            <label for="newEmail">Email (Optional)</label>
+            <label for="newEmail">Update Email (Optional)</label>
             <input type="text" id="newEmail" v-model="newEmail">
-            <label for="newPassword">Password (Optional)</label>
-            <input type="text" id="newPassword" v-model="newPassword" v-on:keyup="checkPasswordError()">
-            <label for="newConfirmPassword">Confirm Password (Optional)</label>
-            <input type="text" id="newConfirmPassword" v-model="newConfirmPassword" v-on:keyup="checkPasswordError()">
-            <p v-if="passwordMatchError">Passwords do not match</p>
-            <p v-if="passwordLengthError">Passwords length must be at least 8 characters</p>
-            <label for="newAge">Age (Optional)</label>
             <div>
+                <label for="newAge">Update Age (Optional)</label>
                 <select id="newAge" v-model="newAge">
                     <option v-for="age in 120">
                         {{ age }}
                     </option>
                 </select>
             </div>
-        </div>
-        <button v-on:click.prevent="updateUser()">Update</button>
+            <label for="newPassword">New Password (Optional)</label>
+            <input type="text" id="newPassword" v-model="newPassword" v-on:keyup="checkPasswordError()">
+            <label for="newConfirmPassword">Confirm New Password</label>
+            <input type="text" id="newConfirmPassword" v-model="newConfirmPassword" v-on:keyup="checkPasswordError()">
+            <p v-if="passwordMatchError">Passwords do not match</p>
+            <p v-if="passwordLengthError">Passwords length must be at least 8 characters</p>
+       </div>
+        <button class="btn" v-on:click.prevent="updateUser()">Update</button>
     </div>
 </template>
 
@@ -60,8 +75,14 @@ export default {
         this.getUserDetails()
     },
     methods: {
+        navToTasks() {
+            this.$router.push('/loggedin')
+        },
+        navToDeleteAccount() {
+            this.$router.push('./deleteaccount')
+        },
         logoutAll() {
-            this.$http.post('http://localhost:3001/users/logoutAll', {}, {
+            this.$http.post(process.env.VUE_APP_API_URL + '/users/logoutAll', {}, {
                 headers:    {
                     Authorization:  'Bearer ' + this.token
                 }
@@ -75,7 +96,7 @@ export default {
             })
         },
         getUserDetails() {
-            this.$http.get('http://localhost:3001/users/me', {
+            this.$http.get(process.env.VUE_APP_API_URL + '/users/me', {
                 headers:    {
                     Authorization:  'Bearer ' + this.token
                 }
@@ -124,7 +145,7 @@ export default {
                 && this.newPassword.length > 7) {
                 updateObj.password = this.newPassword
             }
-            this.$http.patch('http://localhost:3001/users/me', updateObj, {
+            this.$http.patch(process.env.VUE_APP_API_URL + '/users/me', updateObj, {
                 headers:    {
                     Authorization:  'Bearer ' + this.token
                 }

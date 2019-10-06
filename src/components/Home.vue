@@ -77,7 +77,7 @@ export default {
             if (this.passwordMatchError === true) {
                 return
             }
-            this.$http.post('http://localhost:3001/users', {
+            this.$http.post(process.env.VUE_APP_API_URL + '/users', {
                 name:       this.signupName,
                 email:      this.signupEmail,
                 password:   this.signupPassword,
@@ -107,7 +107,7 @@ export default {
             })
         },
         loginSubmit() {
-            this.$http.post('http://localhost:3001/users/login', {
+            this.$http.post(process.env.VUE_APP_API_URL + '/users/login', {
                 email:      this.loginEmail,
                 password:   this.loginPassword,
             }).then(response => {
@@ -152,6 +152,11 @@ export default {
     h1 {
         font-family:        'Lobster', sans-serif;
         font-size:          5rem;
+    }
+
+    h2 {
+        font-family:        'Lobster', sans-serif;
+        font-size:          2.4rem;
     }
 
     hr {
@@ -262,6 +267,11 @@ export default {
         display:            flex;
         flex-flow:          row wrap;
         justify-content:    center;
+    }
+
+    .autoWidth {
+        width:              auto;
+        padding:            1rem;
     }
 
 </style>

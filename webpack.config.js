@@ -1,5 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
+var UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
   entry: './src/main.js',
@@ -49,16 +50,41 @@ if (process.env.NODE_ENV === 'production') {
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: '"production"'
+        NODE_ENV: '"production"',
+        VUE_APP_API_URL:      '"54.227.103.242"',
       }
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
+    new UglifyJsPlugin({
+      "uglifyOptions":
+        {
+          compress: {
+                  warnings: false
+          },
+          sourceMap: true
+        }
       }
-    }),
+    ),
+    // new webpack.optimize.UglifyJsPlugin({
+    //   compress: {
+    //     warnings: false
+    //   }
+    // }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
     })
   ])
 }
+
+if (process.env.NODE_ENV === 'development') {
+
+  module.exports.plugins = (module.exports.plugins || []).concat([
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV:             '"development"',
+        VUE_APP_API_URL:      '"http://localhost:3001"',
+      }
+    })
+  ]);
+}
+
+

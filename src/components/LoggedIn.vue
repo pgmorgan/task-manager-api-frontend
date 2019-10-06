@@ -1,12 +1,12 @@
 <template>
     <div class="homePage">
         <h1>TaskTracker.io</h1>
-        <!-- <h2>Welcome {{  }}</h2> -->
         <div>
             <button class="btn" v-on:click.prevent="logout">Logout</button>
             <button class="btn" v-on:click.prevent="navToSettings">User Settings</button>
         </div>
         <hr/>
+        <button class="btn autoWidth" v-on:click.prevent="navToNewTask()">Add New Task</button>
         <div id="filterLabelsAndSelects">
             <span id="filterLabels">
                 <label for="filter">Filter by Task Status:</label>
@@ -70,6 +70,7 @@
                     <button class="btn btn-small" v-if="!task.completed" v-on:click.prevent="changeCompletionStatus(task._id, true)">Mark as<br>Completed</button>
                     <button class="btn btn-small" v-if="task.completed" v-on:click.prevent="changeCompletionStatus(task._id, false)">Mark as<br>Incomplete</button>
                     <button class="btn btn-small" v-if="!task.showUpdateDescription" v-on:click.prevent="promptUpdateDescription(i)">Update<br>Description</button>
+                    <button class="btn btn-small" v-if="!task.showUpdateDescription" v-on:click.prevent="deleteTask(task._id)">Delete<br>Task</button>
                     <button class="btn btn-small" v-if="task.showUpdateDescription" v-on:click.prevent="promptUpdateDescription(i)">Cancel Update<br>Description</button>
                     <button class="btn btn-small" v-if="task.showUpdateDescription" v-on:click.prevent="updateDescription(task._id, i)">Save</button>
                 </div>
@@ -112,11 +113,25 @@ export default {
         // this.$http.get(
     },
     methods: {
+        deleteTask(taskID) {
+            this.$http.delete(process.env.VUE_APP_API_URL + '/tasks/' + taskID, {
+                headers:    {
+                    Authorization:  'Bearer ' + this.token
+                }
+            }).then(response => {
+                this.getTasks()
+            }, error => {
+                console.log(error)
+            })
+        },
+        navToNewTask() {
+            this.$router.push('/newtask')
+        },
         navToSettings() {
             this.$router.push('/settings')
         },
         updateDescription(taskID, i) {
-            this.$http.patch('http://localhost:3001/tasks/' + taskID, {
+            this.$http.patch(process.env.VUE_APP_API_URL + '/tasks/' + taskID, {
                 description:   this.taskArray[i].description,
             }, {
                 headers: {
@@ -134,7 +149,7 @@ export default {
             this.$forceUpdate()
         },
         changeCompletionStatus(taskID, boolValue)  {
-            this.$http.patch('http://localhost:3001/tasks/' + taskID, {
+            this.$http.patch(process.env.VUE_APP_API_URL + '/tasks/' + taskID, {
                 completed:  boolValue
             }, { 
                 headers: { 
@@ -146,20 +161,6 @@ export default {
                 console.log(error)
             })
         },
-        // markAsIncomplete(taskID) {
-        //     this.$http.patch('http://localhost:3001/tasks/' + taskID, {
-        //         completed:  false
-        //     }, { 
-        //         headers: { 
-        //             'Authorization':  'Bearer ' + this.token 
-        //         } 
-        //     }).then(response => {
-        //         this.getTasks()
-        //     }, error => {
-        //         console.log(error)
-        //     })
-            
-        // },
         showPreviousPage() {
             this.skipAmount -= this.selectedLimit
             this.getTasks()
@@ -174,7 +175,7 @@ export default {
             this.showPreviousButton = true
         },
         modifyTaskUrl() {
-            let url = 'http://localhost:3001/tasks?'
+            let url = process.env.VUE_APP_API_URL + '/tasks?'
             if (this.selectedStatus === 'Incomplete Only') {
                 url += 'completed=false&'
             } else if (this.selectedStatus === 'Completed Only') {
@@ -220,7 +221,6 @@ export default {
             }, error => {
                 console.log(error)
             })
-            // console.log(this.taskArray)
         },
         logout() {
             this.token = ''

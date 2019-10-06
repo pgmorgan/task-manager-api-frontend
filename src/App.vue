@@ -35,6 +35,8 @@
     }
 
     #centerBody {
-        background:             rgba(255, 255, 255, 0.5);
+        background:             rgba(255, 255, 255, 0.80);
+        background-attachment:  fixed;
+        background-size:        cover;
     }
 </style>
