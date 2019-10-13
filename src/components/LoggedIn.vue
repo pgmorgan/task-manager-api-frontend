@@ -9,10 +9,10 @@
         <button class="btn autoWidth" v-on:click.prevent="navToNewTask()">Add New Task</button>
         <div id="filterLabelsAndSelects">
             <span id="filterLabels">
-                <label for="filter">Filter by Task Status:</label>
-                <label for="sortBy">Sort by:</label>
-                <label for="order">Order:</label>
-                <label for="limit">Number of results per page:</label>
+                <label class="smallText" for="filter">Filter by Task Status:</label>
+                <label class="smallText" for="sortBy">Sort by:</label>
+                <label class="smallText" for="order">Order:</label>
+                <label class="smallText" for="limit">Results per page:</label>
             </span>
             <span class="spanGap"></span>
             <span>
@@ -104,7 +104,7 @@ export default {
             this.$router.push('/')
             return
         }
-        this.$store.state.token = loadedToken
+        // this.$store.state.token = loadedToken
         this.token = loadedToken
         // /* ^^^ DELETE ^^^^ */
         // /* ^^^^^^^^^^^^^^^ */
@@ -224,7 +224,7 @@ export default {
         },
         logout() {
             this.token = ''
-            this.$store.state.token = ''
+            // this.$store.state.token = ''
             localStorage.setItem('token', '')
             this.$router.push({path: '/'})
         },

@@ -22,7 +22,7 @@ export default {
             this.$router.push('/')
             return
         }
-        this.$store.state.token = loadedToken
+        // this.$store.state.token = loadedToken
         this.token = loadedToken 
     },
     methods: {

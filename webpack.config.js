@@ -38,6 +38,8 @@ module.exports = {
     }
   },
   devServer: {
+    inline: true,
+    port:   80,
     historyApiFallback: true,
     noInfo: true
   },
@@ -51,7 +53,7 @@ if (process.env.NODE_ENV === 'production') {
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"production"',
-        VUE_APP_API_URL:      '"54.227.103.242"',
+        VUE_APP_API_URL:      '"http://mytaskmanagerapp.com"',
       }
     }),
     new UglifyJsPlugin({
@@ -81,7 +83,7 @@ if (process.env.NODE_ENV === 'development') {
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV:             '"development"',
-        VUE_APP_API_URL:      '"http://localhost:3001"',
+        VUE_APP_API_URL:      '"http://mytaskmanagerapp.com"',
       }
     })
   ]);

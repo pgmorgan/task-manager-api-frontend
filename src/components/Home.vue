@@ -52,7 +52,7 @@ export default {
     created:    function() {
         const loadedToken = localStorage.getItem('token')
         if (loadedToken) {
-            this.$store.state.token = loadedToken
+            // this.$store.state.token = loadedToken
             this.token = loadedToken
             /* ^^^^^^ */
             /* DELETE */
@@ -82,7 +82,7 @@ export default {
                 email:      this.signupEmail,
                 password:   this.signupPassword,
             }).then(response => {
-                this.$store.state.token = response.body.token
+                // this.$store.state.token = response.body.token
                 localStorage.setItem('token', response.body.token)
                 this.token = response.body.token
                 /* ^^^^^^ */
@@ -114,7 +114,7 @@ export default {
                 this.loginError = false
                 /* ^^^^^^ */
                 /* DELETE */
-                this.$store.state.token = response.body.token
+                // this.$store.state.token = response.body.token
                 localStorage.setItem('token', response.body.token)
                 this.token = response.body.token
                 /* ^^^^^^ */
@@ -184,7 +184,7 @@ export default {
 
     .btn-small {
         width:              auto;
-        font-size:          1.35rem;
+        font-size:          1.00rem;
         font-weight:        normal;
         padding:            0.3rem 0.3rem 0.3rem 0.3rem;
         height:             5rem;
@@ -274,4 +274,7 @@ export default {
         padding:            1rem;
     }
 
+    .smallText {
+        font-size:          1.15rem;
+    }
 </style>
