@@ -104,13 +104,8 @@ export default {
             this.$router.push('/')
             return
         }
-        // this.$store.state.token = loadedToken
         this.token = loadedToken
-        // /* ^^^ DELETE ^^^^ */
-        // /* ^^^^^^^^^^^^^^^ */
-        
         this.getTasks()
-        // this.$http.get(
     },
     methods: {
         deleteTask(taskID) {
@@ -145,7 +140,6 @@ export default {
         },
         promptUpdateDescription(i) {
             this.taskArray[i].showUpdateDescription = !this.taskArray[i].showUpdateDescription
-            // this.getTasks()
             this.$forceUpdate()
         },
         changeCompletionStatus(taskID, boolValue)  {
@@ -224,7 +218,6 @@ export default {
         },
         logout() {
             this.token = ''
-            // this.$store.state.token = ''
             localStorage.setItem('token', '')
             this.$router.push({path: '/'})
         },

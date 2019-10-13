@@ -6,7 +6,9 @@ import App from './App.vue'
 import { routes } from './routes'
 import { store } from './store/store'
 
+/*  Using vue-router to manage "page" routing on the Single Page Application */
 Vue.use(VueRouter)
+/*  Using vue-resource to make http requests to the backend REST API */
 Vue.use(VueResource)
 Vue.use(VueCookies)
 
@@ -20,6 +22,5 @@ const router = new VueRouter({
 new Vue({
   el: '#app',
   router: router,
-  // store:  store,
   render: h => h(App),
 })
